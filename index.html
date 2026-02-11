@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Our Promise Forever 💍</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+
+<body onclick="startMusicOnce()">
+
+<div class="background-hearts"></div>
+
+<!-- 🎵 Romantic Background Music -->
+<audio id="bgMusic" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3b2b5f9f1e.mp3?filename=romantic-piano-110397.mp3" type="audio/mpeg">
+</audio>
+
+<button id="musicToggle" class="music-btn">🔊</button>
+
+<!-- 💍 Welcome Screen -->
+<div class="screen active" id="welcomeScreen">
+  <h1>Our Promise Forever 💍</h1>
+  <p>Today isn’t about memories… it’s about what we promise from now on.</p>
+  <button class="primary-btn" onclick="startQuiz()">Begin Our Promise Journey →</button>
+</div>
+
+<!-- 💖 Quiz Screen -->
+<div class="screen" id="quizScreen">
+  <div class="card">
+    <div class="progress" id="progressText"></div>
+    <h2 id="questionText"></h2>
+    <div id="optionsContainer"></div>
+  </div>
+</div>
+
+<!-- 🎉 Result Screen -->
+<div class="screen" id="resultScreen">
+  <div class="card" id="resultContent"></div>
+</div>
+
+<script>
+function startMusicOnce() {
+  const music = document.getElementById("bgMusic");
+  if (music.paused) {
+    music.play().catch(() => {});
+  }
+}
+
+document.getElementById("musicToggle").onclick = function(event) {
+  event.stopPropagation();
+  const music = document.getElementById("bgMusic");
+  if (music.paused) {
+    music.play();
+    this.innerText = "🔊";
+  } else {
+    music.pause();
+    this.innerText = "🔇";
+  }
+};
+</script>
+
+<script src="app.js"></script>
+
+</body>
+</html>
