@@ -1,169 +1,100 @@
-const bgMusic = document.getElementById("bgMusic");
-
 const questions = [
   {
-    question: "What should always come first in our relationship?",
-    options: [
-      "My ego (obviously 😌)",
-      "Silent treatment 🙄",
-      "Understanding & respect 🤍",
-      "Winning arguments every time 😎"
-    ],
-    correct: 2
+    q: "When life gets hard, what do we promise?",
+    o: ["Walk away", "Fight together 💍", "Ignore each other"],
+    c: 1
   },
   {
-    question: "When we fight, what do we promise to do?",
-    options: [
-      "Block each other dramatically 🚫",
-      "Sleep angry 😤",
-      "Talk, hug, fix it & stay together 💞",
-      "Post sad quotes on Instagram 😏"
-    ],
-    correct: 2
+    q: "Our forever rule is?",
+    o: ["No giving up ❤️", "No talking", "No effort"],
+    c: 0
   },
   {
-    question: "Our forever rule is…",
-    options: [
-      "No overthinking",
-      "No giving up on each other 💍",
-      "No saying sorry ever",
-      "No drama (impossible)"
-    ],
-    correct: 1
-  },
-  {
-    question: "When life gets hard, we will…",
-    options: [
-      "Blame each other",
-      "Walk away",
-      "Hold hands tighter & fight together 🤝",
-      "Cry separately"
-    ],
-    correct: 2
-  },
-  {
-    question: "Our biggest Promise today is…",
-    options: [
-      "Love only when it’s easy",
-      "Choose each other every single day 💖",
-      "Stay only in good times",
-      "Argue professionally"
-    ],
-    correct: 1
+    q: "Biggest promise today?",
+    o: ["Love only when easy", "Choose each other daily 💖", "Stay only in happy times"],
+    c: 1
   }
 ];
 
-let currentQuestion = 0;
+let index = 0;
 let score = 0;
 
 function startQuiz() {
-  document.getElementById("welcomeScreen").classList.remove("active");
-  document.getElementById("quizScreen").classList.add("active");
-  bgMusic.play().catch(() => {});
+  document.getElementById("welcome").classList.remove("active");
+  document.getElementById("quiz").classList.add("active");
+  document.getElementById("bgMusic").play().catch(()=>{});
   loadQuestion();
+  createPetals();
 }
 
 function loadQuestion() {
-  const q = questions[currentQuestion];
-  document.getElementById("progressText").innerText = `Promise ${currentQuestion + 1}/5`;
-  document.getElementById("questionText").innerText = q.question;
+  const q = questions[index];
+  document.getElementById("progress").innerText = `Promise ${index+1}/${questions.length}`;
+  document.getElementById("question").innerText = q.q;
 
-  const container = document.getElementById("optionsContainer");
-  container.innerHTML = "";
+  const optionsDiv = document.getElementById("options");
+  optionsDiv.innerHTML = "";
 
-  q.options.forEach((option, index) => {
-    const btn = document.createElement("button");
-    btn.innerText = option;
-    btn.classList.add("option-btn");
-
-    btn.onclick = () => {
-      showFloatingLove(btn);
-
-      if (index === q.correct) {
+  q.o.forEach((opt,i)=>{
+    const div = document.createElement("div");
+    div.className = "option";
+    div.innerText = opt;
+    div.onclick = ()=>{
+      if(i===q.c){
         score++;
         showKiss();
       }
-
-      setTimeout(() => {
-        currentQuestion++;
-        if (currentQuestion < questions.length) {
-          loadQuestion();
-        } else {
-          showResult();
-        }
-      }, 1000);
+      index++;
+      if(index<questions.length){
+        loadQuestion();
+      } else {
+        showResult();
+      }
     };
-
-    container.appendChild(btn);
+    optionsDiv.appendChild(div);
   });
 }
 
-function showFloatingLove(element) {
-  const emojis = ["💖","💘","💞","💕","💓","💗","💋"];
-  const love = document.createElement("div");
-  love.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-  love.classList.add("floating-love");
-
-  love.style.left = element.getBoundingClientRect().left + 50 + "px";
-  love.style.top = element.getBoundingClientRect().top + "px";
-
-  document.body.appendChild(love);
-
-  setTimeout(() => love.remove(), 2000);
-}
-
-function showKiss() {
+function showKiss(){
   const kiss = document.createElement("div");
-  kiss.innerText = "💋";
-  kiss.classList.add("kiss");
+  kiss.innerText="💋";
+  kiss.style.position="fixed";
+  kiss.style.fontSize="100px";
+  kiss.style.left="50%";
+  kiss.style.top="50%";
+  kiss.style.transform="translate(-50%,-50%)";
   document.body.appendChild(kiss);
-
-  setTimeout(() => kiss.remove(), 1500);
+  setTimeout(()=>kiss.remove(),1000);
 }
 
-function showResult() {
-  document.getElementById("quizScreen").classList.remove("active");
-  document.getElementById("resultScreen").classList.add("active");
+function showResult(){
+  document.getElementById("quiz").classList.remove("active");
+  document.getElementById("result").classList.add("active");
 
-  const resultDiv = document.getElementById("resultContent");
+  const r = document.getElementById("resultContent");
 
-  if (score === 5) {
-    resultDiv.innerHTML = `
-      <h2>You chose us. Every single time. 💍</h2>
-      <p>I promise to annoy you, love you, kiss you, protect you and choose you forever.</p>
-      <button class="primary-btn" onclick="megaConfetti()">Seal The Forever Promise 💖</button>
-    `;
+  if(score===questions.length){
+    r.innerHTML=`<h2>Forever Sealed 💍</h2>
+    <p>I promise to choose you every day, every mood, every lifetime.</p>`;
   } else {
-    resultDiv.innerHTML = `
-      <h2>Not perfect… but still mine 😌</h2>
-      <p>Will you promise to stay with me forever?</p>
-      <button class="primary-btn" id="yesBtn">Yes, Forever 💍</button>
-      <button class="option-btn" id="noBtn">No 🙈</button>
-    `;
-
-    let yes = document.getElementById("yesBtn");
-    let no = document.getElementById("noBtn");
-
-    no.onclick = () => {
-      yes.style.transform = "scale(1.3)";
-      no.style.transform = "scale(0.7)";
-      no.style.opacity = "0.6";
-    };
-
-    yes.onclick = megaConfetti;
+    r.innerHTML=`<h2>Still Mine 😌</h2>
+    <p>Promise me you won’t escape forever?</p>`;
   }
 }
 
-function megaConfetti() {
-  for (let i = 0; i < 200; i++) {
-    const conf = document.createElement("div");
-    conf.classList.add("confetti");
-    conf.style.left = Math.random() * 100 + "vw";
-    conf.style.background = Math.random() > 0.5 ? "gold" : "#ff4d6d";
-    document.body.appendChild(conf);
-    setTimeout(() => conf.remove(), 3000);
-  }
-
-  document.getElementById("resultContent").innerHTML =
-    "<h2>Promise Accepted. Sealed With Love 💋💍</h2><p>You are stuck with me forever now 😏</p>";
+function createPetals(){
+  const petals = document.getElementById("petals");
+  setInterval(()=>{
+    const span = document.createElement("span");
+    span.innerText="🌸";
+    span.style.left=Math.random()*100+"vw";
+    span.style.animationDuration=(3+Math.random()*3)+"s";
+    petals.appendChild(span);
+    setTimeout(()=>span.remove(),6000);
+  },500);
 }
+
+document.getElementById("musicToggle").onclick=function(){
+  const m=document.getElementById("bgMusic");
+  if(m.paused){m.play();} else {m.pause();}
+};
